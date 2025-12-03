@@ -1,0 +1,76 @@
+---
+alwaysApply: false
+---
+You are an expert in TypeScript, React Native, Expo, and Mobile UI development. Your generated code must be concise, technical, and include accurate examples.
+
+Code Style and Structure:
+- Language: Use TypeScript for all code, enabling strict mode for better type safety.
+- Paradigm: Use functional components with hooks (e.g., useState, useEffect, useMemo, useCallback) over class components. Prefer functional and declarative programming patterns.
+- Modularity: Keep components small, focused, and dedicated to a single responsibility. Prefer iteration and modularization over code duplication.
+
+File Organization (by Feature):
+- Group related files (components, hooks, styles, types) into feature-based directories (e.g., user-profile, chat-screen).
+
+- Structure files consistently: exported main component, subcomponents, helper functions, static content, and types/interfaces.
+
+- Formatting: Use Prettier for consistent code formatting.
+
+Naming Conventions:
+- Components: Use PascalCase (e.g., UserProfile, ChatScreen). Prefer named exports for components.
+- Variables/Functions: Use camelCase (e.g., isFetchingData, handleUserInput). Use descriptive names with auxiliary verbs for booleans (e.g., isLoading, hasError).
+- Directories: Use lowercase and hyphenated names (e.g., user-profile, auth-wizard).
+
+TypeScript Usage:
+- Type Declaration: Prefer interfaces over types for object and component prop definitions.
+- Type Safety: Avoid global variables and the use of the any type; strive for precise types.
+- Enums: Avoid enums; use object maps or union types instead.
+- ES6+ Features: Leverage modern ES6+ features like arrow functions, destructuring, and template literals.
+- Pure Functions: Use the "function" keyword for pure functions.
+
+Performance Optimization:
+- State Updates: Minimize the use of useState and useEffect hooks. Avoid unnecessary state updates.
+- Memoization: Prevent unnecessary re-renders by using React.memo() for functional components and useMemo/useCallback for values and functions passed to child components.
+- FlatList: Optimize FlatList with props like removeClippedSubviews, maxToRenderPerBatch, and windowSize. Use getItemLayout when item size is consistent.
+- Render Callbacks: Avoid anonymous functions (i.e., inline arrow functions) in renderItem or event handlers passed as props to prevent unnecessary re-renders.
+- Startup: Use Expo's AppLoading and SplashScreen for an optimized startup experience.
+- Images: Optimize images: use WebP format where supported, include size data, and implement lazy loading with expo-image.
+- Bundling: Implement code splitting and lazy loading for non-critical components with React's Suspense and dynamic imports.
+- Profiling: Profile and monitor performance using React Native's built-in tools and Expo's debugging features.
+
+UI and Styling:
+- Styling Consistency: Use StyleSheet.create() or Styled Components/Tailwind CSS for component styling.
+- Responsiveness: Implement responsive design using Flexbox and Expo's useWindowDimensions for screen size adjustments.
+- Image Handling: Use optimized image libraries like react-native-fast-image or expo-image.
+- Accessibility: Ensure high accessibility (a11y) standards using ARIA roles and native accessibility props. Implement dark mode support using Expo's useColorScheme.
+- Animation/Gestures: Leverage react-native-reanimated and react-native-gesture-handler for performant animations and gestures.
+
+Navigation and Routing:
+- Routing: Use Expo Router for file-based routing. It provides native navigation and deep linking.
+- Navigation Library: Use react-navigation for routing and complex navigation flows (stack, tab, drawer navigators) as needed.
+- Deep Linking: Leverage deep linking and universal links for better user engagement.
+- URL Params: Handle URL search parameters using libraries like expo-linking.
+
+State Management:
+- Global State: Use React Context and useReducer for managing global state.
+- Data Fetching/Caching: Leverage react-query for server state management, data fetching, and caching; avoid excessive API calls.
+- Complex State: For complex state logic, consider using Zustand or Redux Toolkit (use the one that best suits the project complexity and team familiarity).
+
+Error Handling and Validation:
+- Validation: Use Zod for runtime validation and schema definition (especially for API data).
+- Error Prevention: Prioritize error handling and edge cases:
+    * Handle errors at the beginning of functions.
+    * Use early returns for error conditions (if-return pattern) to avoid deeply nested if/else statements.
+- Logging: Implement proper error logging using Sentry or a similar service. Use expo-error-reporter for production error logging and reporting.
+- Boundary: Implement global error boundaries to catch and handle unexpected UI errors.
+
+Security and Conventions:
+- Security: Sanitize user inputs to prevent XSS attacks. Use react-native-encrypted-storage for secure storage of sensitive data. Ensure secure communication with APIs using HTTPS and proper authentication.
+- Deployment: Utilize Expo's EAS Build and Updates for continuous deployment and Over-The-Air (OTA) updates.
+- Configuration: Use expo-constants for managing environment variables. Use expo-permissions to handle device permissions gracefully.
+- I18n: Use react-native-i18n or expo-localization for internationalization, supporting multiple languages and RTL layouts.
+- Safe Areas: Use SafeAreaProvider from react-native-safe-area-context to manage safe areas globally. Wrap top-level/scrollable components with SafeAreaView/SafeAreaScrollView.
+
+Testing:
+- Unit Tests: Write unit tests using Jest and React Native Testing Library.
+- Integration Tests: Implement integration tests for critical user flows using Detox.
+- UI Consistency: Consider snapshot testing for components to ensure UI consistency.
