@@ -6,13 +6,14 @@ if (__DEV__) {
 // Import global CSS for NativeWind
 import '../global.css';
 
-import { View } from 'react-native';
+import { View, AppState, AppStateStatus } from 'react-native';
 import { Stack, useRouter, Slot, useSegments, router, useRootNavigationState } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useState, useEffect } from 'react';
 import { SplashScreen } from '../components/SplashScreen';
 import { useAuthStore } from '../store/authStore';
 import { supabase } from '../lib/supabase';
+import { triggerSync } from '../db/sync';
 
 export default function RootLayout() {
   const [isReady, setIsReady] = useState(false);
@@ -37,6 +38,12 @@ export default function RootLayout() {
         }
       }
     );
+
+    // Trigger initial sync after auth is established
+    if (session) {
+      console.log('[Sync] Auth listener detected session, triggering initial sync');
+      triggerSync();
+    }
 
     return () => {
       console.log('[App Cleanup] Unsubscribing from Supabase auth listener');
@@ -72,6 +79,17 @@ export default function RootLayout() {
       // console.log('[Navigation] No redirect needed');
     }
   }, [session, segments, isReady, _hasHydrated]);
+
+  // Sync on app foreground
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', (nextState: AppStateStatus) => {
+      if (nextState === 'active' && session) {
+        console.log('[Sync] App came to foreground, triggering sync');
+        triggerSync();
+      }
+    });
+    return () => subscription.remove();
+  }, [session]);
 
   return (
     <View style={{ flex: 1 }}>

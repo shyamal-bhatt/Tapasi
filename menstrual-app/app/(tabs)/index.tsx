@@ -12,6 +12,7 @@ import { router } from 'expo-router';
 import { withObservables } from '@nozbe/watermelondb/react';
 import { database } from '../../db';
 import DailyLog from '../../db/model/DailyLog';
+import { triggerSync } from '../../db/sync';
 
 interface CalendarScreenProps {
     logs: DailyLog[]; // Injected by withObservables
@@ -107,6 +108,9 @@ function CalendarScreen({ logs }: CalendarScreenProps) {
                 console.log('[DB] Created new log:', newLog);
             });
         }
+
+        // Trigger sync to Supabase after every save
+        triggerSync();
     };
 
     return (

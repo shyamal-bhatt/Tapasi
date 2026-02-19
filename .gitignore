@@ -3,6 +3,7 @@
 # Root level
 .DS_Store
 .agent/
+project_file_structure.md
 
 # Dependencies
 menstrual-app/node_modules/
