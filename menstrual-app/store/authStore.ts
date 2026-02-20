@@ -4,6 +4,8 @@ import { type Session } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
 
 import { storage } from '../lib/storage';
+import { database } from '../db';
+import { syncDatabase } from '../db/sync';
 
 const zustandStorage: StateStorage = {
     setItem: (name, value) => storage.set(name, value),
@@ -33,10 +35,25 @@ const storeCreator = persist<AuthState, [], [], Pick<AuthState, 'session'>>(
         logout: async () => {
             console.log('[User Action] Auth - Logout Initiated');
             try {
+                // 1. Sync pending local changes to Supabase
+                console.log('[User Action] Auth - Syncing pending changes before logout...');
+                await syncDatabase();
+
+                // 2. Wipe the SQLite data and safely rebuild the empty schema
+                console.log('[User Action] Auth - Resetting WatermelonDB...');
+                await database.write(async () => {
+                    await database.unsafeResetDatabase();
+                });
+                // Ensure the sync memory is completely zeroed out
+                await database.adapter.removeLocal('__watermelon_last_pulled_at');
+
+                // 3. Sign out of Supabase
+                console.log('[User Action] Auth - Signing out from Supabase...');
                 await supabase.auth.signOut();
-                console.log('[User Action] Auth - Supabase SignOut Success');
+
+                console.log('[User Action] Auth - Logout Flow Complete');
             } catch (error) {
-                console.error('[User Action] Auth - Error signing out from Supabase', error);
+                console.error('[User Action] Auth - Error signing out or resetting DB', error);
             }
             // Session will be cleared by the auth listener in _layout.tsx
         },

@@ -39,19 +39,21 @@ export default function RootLayout() {
       }
     );
 
-    // Trigger initial sync after auth is established
-    if (session) {
-      console.log('[Sync] Auth listener detected session, triggering initial sync');
-      triggerSync();
-    }
-
     return () => {
       console.log('[App Cleanup] Unsubscribing from Supabase auth listener');
       subscription.unsubscribe();
     };
   }, []);
 
+  // Trigger sync automatically when a user logs in or the app boots with a session
   useEffect(() => {
+    if (session?.user?.id) {
+      console.log('[Sync] Active session detected via store, triggering sync');
+      triggerSync();
+    }
+  }, [session?.user?.id]);
+  useEffect(() => {
+
     // Wait for the root navigation to be ready
     if (!rootNavigationState?.key) return;
 

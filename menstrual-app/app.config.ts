@@ -44,7 +44,19 @@ export default ({ config }: ConfigContext): ExpoConfig => {
                 {
                     iosUrlScheme
                 }
-            ]
+            ],
+            [
+                "expo-build-properties",
+                {
+                    "android": {
+                        "minSdkVersion": 26
+                    },
+                    "ios": {
+                        "deploymentTarget": "15.1"
+                    }
+                }
+            ],
+            "expo-sqlite"
         ]
     };
 };
